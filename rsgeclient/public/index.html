@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>RS GE</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+    <script src="https://eservices.rs.ge/js/OAuth.js"></script>
+  </head>
+  <body>
+    <script>
+      var API_PREFIX = "";
+    </script>
+    <div id="app"></div>
+  </body>
+  <script>
+    // ფუნქცია onCallBack გამოიძახება ავტორიზაციის დასრულების შემდეგ
+    // data პარამეტრში ფუნქციას გადმოეცემა ავტორიზაციის შედეგი
+    function onCallBack(data) {
+      if (data.Authenticated) {
+        console.log('data',data)
+        // https://localhost:44338/
+        // აქ ჩაწერეთ კოდი საიდანაც იძახებთ თქვენს სერვერს და გადასცემთ data.AuthKey-ს
+        // data.AuthKey - ში მოდის ავტორიზაციის კოდი, რომელიც
+        // SecretKey-სთან ერთად პარამეტრად უნდა გადასცეთ ჩვენს
+        // სერვისს. სერვისი აუცილებლად უნდა გამოიძახოთ სერვერის მხრიდან!
+        // window.location.replace('#/Statement/add')
+        localStorage.setItem('authKey', data.AuthKey)
+        $.ajax({
+          url: 'https://localhost:44342/api/account/rsLogin',
+          // url: API_PREFIX + '/api/account/rsLogin',
+          method: 'POST',
+          dataType: 'json',
+          data:  {'autKey': data.AuthKey},
+          success: function (data, textStatus, xhr) {
+              console.log(444,data,this.$route);
+              localStorage.setItem('currentUser', JSON.stringify(data))
+              localStorage.setItem('isFromRS', '1')
+  
+              window.location.replace(API_PREFIX+ '#/Home')
+              // window.location="http://localhost:8080/Statement/add"
+          },
+          error: function (xhr, textStatus, errorThrown) {
+              console.log('Error in Operation'+xhr.response + xhr.responseText +xhr.statusText  + textStatus + errorThrown);
+          }
+      });
+      }
+      else {
+        alert("თქვენ ვერ გაიარეთ ავტორიზაცია RS-ზე მიზეზი: " + data.Response);
+      }
+    }
+  </script>
+  
+</html>
