@@ -21,7 +21,7 @@ Vue.filter('dateToDayMonthYear', date => {
   }
   const momentDate = moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSS')
 
-  return momentDate.isValid() ? momentDate.format('DD MMMM YYYY, h:mm ') : null
+  return momentDate.isValid() ? momentDate.format('YYYY-MM-DD HH:mm') : null
 })
 
 Vue.filter("invoiceStatusesToPresentable", function(key) {

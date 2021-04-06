@@ -36,7 +36,7 @@ export default {
     }
   }),
   async created() {
-    this.currentUser = await this.$http.getTin();
+    // this.currentUser = await this.$http.getTin();
      console.log('this.currentUser----------------------------------',this.currentUser);
   },
 };

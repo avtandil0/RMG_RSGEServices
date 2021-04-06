@@ -115,11 +115,11 @@ namespace RSGEServices.Controllers
 
         [HttpGet]
         [Route("getBuyerInvoices")]
-        public async Task<string> GetBuyerInvoices(DateTime followDateFrom, DateTime followDateTo)
+        public async Task<string> GetBuyerInvoices(DateTime followDateFrom, DateTime followDateTo, string desc)
         {
             var invoices = await invoiceService.Get_buyer_invoicesAsync(this.USER_ID, this.UN_ID,
-                followDateFrom, followDateTo, followDateFrom, followDateTo,
-                "","","","",
+                DateTime.MinValue, DateTime.MaxValue, followDateFrom, followDateTo,
+                "","", desc?? "","",
                 this.USER_NAME, this.USER_PASS);
 
             string jsonText = JsonConvert.SerializeXmlNode(invoices.Result.Any1.FirstChild);
@@ -143,7 +143,10 @@ namespace RSGEServices.Controllers
         [Route("transaction")]
         public async Task<Result> Transaction(TransferObjectDto transferObjectDto)
         {
-
+            if(transferObjectDto.Dagbknr == null)
+            {
+                return new Result(false, 0, "Dagbknr აუცილებელია");
+            }
 
             Amutak amu= _repoWrapper.Amutak.FindByCondition(r => r.Dagbknr == transferObjectDto.Dagbknr)
                                  .OrderByDescending(r => r.Faktuurnr).FirstOrDefault();
@@ -205,8 +208,14 @@ namespace RSGEServices.Controllers
             guid = Guid.NewGuid();
 
 
-            var reknrForAmutak = _repoWrapper.Dagbk.FindByCondition(r => r.TypeDgbk == "I"
-                && r.Dagbknr == transferObjectDto.Dagbknr).FirstOrDefault().Reknr;
+            var dagbknrForReknr = _repoWrapper.Dagbk.FindByCondition(r => r.TypeDgbk == "I"
+                && r.Dagbknr == transferObjectDto.Dagbknr).FirstOrDefault();
+            if(dagbknrForReknr == null)
+            {
+                return new Result(false, 0, "Dagbk ვერ მოიძებნა");
+            }
+
+            var reknrForAmutak = dagbknrForReknr.Reknr;
 
             Amutak amutak1 = _repoWrapper.Amutak.FindByCondition(r => r.Dagbknr == transferObjectDto.Dagbknr)
                                     .OrderByDescending(r => r.Volgnr5).FirstOrDefault();

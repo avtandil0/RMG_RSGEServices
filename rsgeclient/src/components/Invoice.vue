@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="4">
+      <v-col cols="12" sm="3">
         <v-layout row>
           <v-flex xs11>
             <v-select
@@ -13,7 +13,19 @@
         </v-layout>
       </v-col>
 
-      <v-col cols="12" sm="4">
+      <v-col cols="12" sm="3">
+        <v-layout row>
+          <v-flex xs11>
+            <v-text-field
+              label="გამყიდველის დასახელება"
+              v-on:keyup.enter="onEnterSearch"
+              v-model="searchForm.desc"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+      </v-col>
+
+      <v-col cols="12" sm="3">
         <v-layout row>
           <v-flex xs11>
             <v-menu
@@ -27,7 +39,7 @@
               <template v-slot:activator="{ on }">
                 <v-text-field
                   v-model="searchForm.followDateFrom"
-                  label="გამოწერის თარიღიდან"
+                  label="ოპერაციის თარიღიდან"
                   readonly
                   v-on="on"
                 ></v-text-field>
@@ -35,6 +47,7 @@
               <v-date-picker
                 v-model="searchForm.followDateFrom"
                 @input="menu1 = false"
+                type="month"
               ></v-date-picker>
             </v-menu>
           </v-flex>
@@ -42,7 +55,7 @@
         <v-layout row></v-layout>
       </v-col>
 
-      <v-col cols="12" sm="4">
+      <v-col cols="12" sm="3">
         <v-layout row>
           <v-flex xs11>
             <v-menu
@@ -56,7 +69,7 @@
               <template v-slot:activator="{ on }">
                 <v-text-field
                   v-model="searchForm.followDateTo"
-                  label="გამოწერის თარიღამდე"
+                  label="ოპერაციის თარიღამდე"
                   readonly
                   v-on="on"
                 ></v-text-field>
@@ -64,6 +77,7 @@
               <v-date-picker
                 v-model="searchForm.followDateTo"
                 @input="menu2 = false"
+                type="month"
               ></v-date-picker>
             </v-menu>
           </v-flex>
@@ -89,11 +103,11 @@
       <v-icon>mdi-delete</v-icon>
       <div style="padding: 0px 0px 3px 3px">გასუფთავება</div>
     </v-btn> -->
-    <v-btn outlined color="secondary">
+    <!-- <v-btn outlined color="secondary">
       <v-icon>mdi-file-export</v-icon>
 
       <div style="padding: 0px 0px 3px 3px">ექსპორტი</div>
-    </v-btn>
+    </v-btn> -->
 
     <v-data-table
       :headers="headers"
@@ -162,9 +176,10 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="viewDialog.open" max-width="950">
+    <v-dialog v-model="viewDialog.open" max-width="950" scrollable>
       <v-card>
-        <v-card-title class="headline">ნახვა</v-card-title>
+        <v-card-title class="headline">დათვალიერება</v-card-title>
+        <v-divider></v-divider>
 
         <v-card-text>
           <v-row align="center">
@@ -349,7 +364,7 @@
 <script>
 import constants from "../constants";
 import map from "lodash/map";
-import utils from '../utils'
+import utils from "../utils";
 
 export default {
   name: "Invoice",
@@ -364,12 +379,13 @@ export default {
     kstplList: [],
     searchForm: {
       status: null,
+      desc: "",
       followDateFrom: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
         .toISOString()
-        .substr(0, 10),
+        .substr(0, 7),
       followDateTo: new Date(new Date().getTime() + 1 * 24 * 60 * 60 * 1000)
         .toISOString()
-        .substr(0, 10),
+        .substr(0, 7),
     },
     menu1: null,
     menu2: null,
@@ -435,10 +451,10 @@ export default {
   }),
   async created() {
     //ї¦Її
-    console.log( 1111111,utils.tranformToUnicode('ї¦Її'))
+    console.log(1111111, utils.tranformToUnicode("ї¦Її"));
     //  var test = await this.$http.get_ser_users();
-     var test1 = await this.$http.get_un_id_from_user_id();
-      console.log('test1',test1)
+    // var test1 = await this.$http.get_un_id_from_user_id();
+    // console.log("test1", test1);
 
     // var getBuyerInvoicesR  = await this.$http.getBuyerInvoicesR();
     // this.invoices = getBuyerInvoicesR.DocumentElement.invoice_descs
@@ -446,41 +462,40 @@ export default {
     // var rs = await this.$http.get_un_id_from_tin();
     // console.log('rs',rs)
     let dagbkList0 = await this.$http.getDagbk();
-    dagbkList0.forEach(element => {
-      element.oms250 = utils.tranformToUnicode(element.oms250)
+    dagbkList0.forEach((element) => {
+      element.oms250 = utils.tranformToUnicode(element.oms250);
     });
-    this.dagbkList = dagbkList0; 
-
+    this.dagbkList = dagbkList0;
 
     let grtbkList0 = await this.$http.getGrtbk();
-    grtbkList0.forEach(element => {
-      element.oms250 = utils.tranformToUnicode(element.oms250)
+    grtbkList0.forEach((element) => {
+      element.oms250 = utils.tranformToUnicode(element.oms250);
     });
-    this.grtbkList = grtbkList0; 
-
+    this.grtbkList = grtbkList0;
 
     let kstdrList0 = await this.$http.getKstdr();
-    kstdrList0.forEach(element => {
-      element.oms250 = utils.tranformToUnicode(element.oms250)
+    kstdrList0.forEach((element) => {
+      element.oms250 = utils.tranformToUnicode(element.oms250);
     });
-    this.kstdrList = kstdrList0; 
-
+    this.kstdrList = kstdrList0;
 
     let kstplList0 = await this.$http.getKstpl();
-    kstplList0.forEach(element => {
-      element.oms250 = utils.tranformToUnicode(element.oms250)
+    kstplList0.forEach((element) => {
+      element.oms250 = utils.tranformToUnicode(element.oms250);
     });
-    this.kstplList = kstplList0; 
-    
+    this.kstplList = kstplList0;
 
-    let prprojectList0 = await this.$http.getPrproject();//description
-    prprojectList0.forEach(element => {
-      element.description = utils.tranformToUnicode(element.description)
+    let prprojectList0 = await this.$http.getPrproject(); //description
+    prprojectList0.forEach((element) => {
+      element.description = utils.tranformToUnicode(element.description);
     });
-    this.prprojectList = prprojectList0; 
-
+    this.prprojectList = prprojectList0;
   },
   methods: {
+    onEnterSearch() {
+      console.log("aaaaaaa");
+      this.search();
+    },
     onCloseView() {
       this.viewDialog = {
         open: false,
@@ -505,25 +520,30 @@ export default {
       var getInvoiceDesc = await this.$http.getInvoiceDesc(this.viewDialog.id);
       console.log("getInvoiceDesc", getInvoiceDesc);
       if (getInvoiceDesc.DocumentElement.invoices_descs.length > 1) {
-        this.invoiceGoods.push(...getInvoiceDesc.DocumentElement.invoices_descs);
+        this.invoiceGoods.push(
+          ...getInvoiceDesc.DocumentElement.invoices_descs
+        );
       } else {
         this.invoiceGoods.push(getInvoiceDesc.DocumentElement.invoices_descs);
       }
-      this.loadingInvoiceGoods = false
+      this.loadingInvoiceGoods = false;
     },
     async saveTransaction() {
-      console.log('from unicode',  utils.transformFromUnicode(this.transferForm.comment))
+      // console.log(
+      //   "from unicode",
+      //   utils.transformFromUnicode(this.transferForm.comment)
+      // );
       var trans = {
         date: new Date(), //this.transferForm.date,
-        dagbknr: this.transferForm.dagbk.toString(),
-        comment: utils.transformFromUnicode(this.transferForm.comment),
-        seller: this.transactionDialog.sId,
-        amount: parseFloat(this.transactionDialog.amount),
-        invoiceNumber: this.transactionDialog.invoiceNumber,
-        reknr: this.transferForm.grtbk,
-        kstrlCode: this.transferForm.kstpl,
-        project: this.transferForm.prProject,
-        vat: parseFloat(this.transactionDialog.VAT),
+        dagbknr: this.transferForm.dagbk? this.transferForm.dagbk.toString() : '',
+        // comment: utils.transformFromUnicode(this.transferForm.comment),
+        // seller: this.transactionDialog.sId,
+        // amount: parseFloat(this.transactionDialog.amount),
+        // invoiceNumber: this.transactionDialog.invoiceNumber,
+        // reknr: this.transferForm.grtbk,
+        // kstrlCode: this.transferForm.kstpl,
+        // project: this.transferForm.prProject,
+        // vat: parseFloat(this.transactionDialog.VAT),
       };
       console.log(trans);
       this.loadingTrans = true;
@@ -534,7 +554,9 @@ export default {
         dismissable: true,
       });
 
-      this.transactionDialog.open = false;
+      if (postTrans.isSuccess) {
+        this.transactionDialog.open = false;
+      }
     },
     onCloseTransaction() {
       this.transactionDialog = {
@@ -549,14 +571,18 @@ export default {
       };
     },
     openTransactionDialog(item) {
-      console.log('utils.transformFromUnicode(item.F_SERIES)',utils.transformFromUnicode(item.F_SERIES))
+      console.log(
+        "utils.transformFromUnicode(item.F_SERIES)",
+        utils.transformFromUnicode(item.F_SERIES)
+      );
       this.transactionDialog = {
         open: true,
         id: item.ID,
         sId: item.SA_IDENT_NO,
         sName: item.ORG_NAME,
-        seria:  utils.transformFromUnicode(item.F_SERIES) + "" + item.F_NUMBER,
-        invoiceNumber: utils.transformFromUnicode(item.F_SERIES) + ' '+ item.F_NUMBER,
+        seria: utils.transformFromUnicode(item.F_SERIES) + "" + item.F_NUMBER,
+        invoiceNumber:
+          utils.transformFromUnicode(item.F_SERIES) + " " + item.F_NUMBER,
         amount: item.TANXA,
         VAT: item.VAT,
         bId: "206322102",
@@ -566,9 +592,8 @@ export default {
     },
     async search() {
       this.loadingTable = true;
-
+      console.log("this.searchForm", this.searchForm);
       var getBuyerInvoices = await this.$http.getBuyerInvoices(this.searchForm);
-      console.log("getBuyerInvoices", getBuyerInvoices);
       if (
         getBuyerInvoices &&
         getBuyerInvoices.DocumentElement &&
