@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="12" sm="3">
+    <v-row style="display: flex; align-items: center; justify-content: center">
+      <v-col cols="12" sm="2">
         <v-layout row>
           <v-flex xs11>
             <v-select
@@ -13,7 +13,7 @@
         </v-layout>
       </v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="2">
         <v-layout row>
           <v-flex xs11>
             <v-text-field
@@ -25,7 +25,19 @@
         </v-layout>
       </v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="2">
+        <v-layout row>
+          <v-flex xs11>
+            <v-text-field
+              label="თანხა"
+              v-on:keyup.enter="onEnterSearch"
+              v-model="searchForm.tanxa"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+      </v-col>
+
+      <v-col cols="12" sm="2">
         <v-layout row>
           <v-flex xs11>
             <v-menu
@@ -55,7 +67,7 @@
         <v-layout row></v-layout>
       </v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="2">
         <v-layout row>
           <v-flex xs11>
             <v-menu
@@ -380,6 +392,7 @@ export default {
     searchForm: {
       status: null,
       desc: "",
+      tanxa: "",
       followDateFrom: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
         .toISOString()
         .substr(0, 7),
@@ -535,7 +548,9 @@ export default {
       // );
       var trans = {
         date: new Date(), //this.transferForm.date,
-        dagbknr: this.transferForm.dagbk? this.transferForm.dagbk.toString() : '',
+        dagbknr: this.transferForm.dagbk
+          ? this.transferForm.dagbk.toString()
+          : "",
         // comment: utils.transformFromUnicode(this.transferForm.comment),
         // seller: this.transactionDialog.sId,
         // amount: parseFloat(this.transactionDialog.amount),
@@ -608,6 +623,13 @@ export default {
         }
       } else {
         this.invoices = [];
+      }
+      if (this.searchForm.tanxa) {
+         this.invoices = this.invoices.filter(
+            (r) => r.TANXA.toString().includes(this.searchForm.tanxa)
+          );
+      } else {
+        // this.invoices = [];
       }
 
       this.loadingTable = false;
