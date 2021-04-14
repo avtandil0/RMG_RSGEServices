@@ -1,7 +1,7 @@
 const NO_TABLE_DATA_TEXT = 'მონაცემები ვერ მოიძებნა'
 const ROWS_PER_PAGE_TEXT = 'თითო გვერდზე:'
 
-const API_PREFIX = 'https://localhost:44342'
+// const API_PREFIX = 'https://localhost:44342'
 
 
 const GEO_MONTH_NAMES = 'იანვარი_თებერვალი_მარტი_აპრილი_მაისი_ივნისი_ივლისი_აგვისტო_სექტემბერი_ოქტომბერი_ნოემბერი_დეკემბერი'.split('_')

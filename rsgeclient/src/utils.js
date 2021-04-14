@@ -1,4 +1,8 @@
 function tranformToUnicode(str) {
+    if(!str){
+        return ""
+    }
+    
     var tmp = "";
     for (var i = 0; i < str.length; i++) {
         switch (str.charCodeAt(i)) {
@@ -114,6 +118,10 @@ function tranformToUnicode(str) {
 }
 
 function transformFromUnicode(str) {
+    if(!str){
+        return ""
+    }
+
     var tmp = "";
     for (var i = 0; i < str.length; i++) {
         switch (str.charCodeAt(i)) {

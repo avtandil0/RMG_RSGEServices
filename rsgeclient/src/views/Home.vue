@@ -11,19 +11,19 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
-     სისტემაში შემოსულია :
+     <!-- სისტემაში შემოსულია : -->
       <!-- {{currentUser.fullName}}
       {{currentUser.persNo}}
       {{currentUser.payerTypeName}} -->
       
-      <v-tooltip bottom>
+      <!-- <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn v-on="on" icon @click="logOut()">
             <v-icon>mdi-logout</v-icon>
           </v-btn>
         </template>
         <span>გასვლა</span>
-      </v-tooltip>
+      </v-tooltip> -->
     </v-app-bar>
 
     <v-content>

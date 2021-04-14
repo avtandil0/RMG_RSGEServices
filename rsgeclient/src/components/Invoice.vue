@@ -281,21 +281,21 @@
               <v-autocomplete
                 v-model="transferForm.kstpl"
                 :items="kstplOptions"
-                label="kstpl"
+                label="Cost Center"
               ></v-autocomplete>
             </v-col>
             <v-col class="d-flex" cols="12" sm="4">
               <v-autocomplete
                 v-model="transferForm.kstdr"
                 :items="kstdrOptions"
-                label="kstpdr"
+                label="Cost Unit"
               ></v-autocomplete>
             </v-col>
             <v-col class="d-flex" cols="12" sm="4">
               <v-autocomplete
                 v-model="transferForm.prProject"
                 :items="prProjectOptions"
-                label="prProject"
+                label="Project"
               ></v-autocomplete>
             </v-col>
           </v-row>
@@ -304,7 +304,7 @@
               <v-autocomplete
                 v-model="transferForm.dagbk"
                 :items="dagbkOptions"
-                label="Dagbk"
+                label="Journal"
               ></v-autocomplete>
             </v-col>
 
@@ -312,7 +312,7 @@
               <v-autocomplete
                 v-model="transferForm.grtbk"
                 :items="grtbkOptions"
-                label="Grtbk"
+                label="GL Account"
               ></v-autocomplete>
             </v-col>
 
@@ -328,7 +328,7 @@
                 <template v-slot:activator="{ on }">
                   <v-text-field
                     v-model="transferForm.date"
-                    label="გატარების თარიღი"
+                    label="Entry Date"
                     readonly
                     v-on="on"
                   ></v-text-field>
@@ -376,6 +376,7 @@
 <script>
 import constants from "../constants";
 import map from "lodash/map";
+import orderBy from "lodash/orderBy";
 import utils from "../utils";
 
 export default {
@@ -546,19 +547,20 @@ export default {
       //   "from unicode",
       //   utils.transformFromUnicode(this.transferForm.comment)
       // );
+      console.log('this.transferForm.comment',this.transferForm.comment)
       var trans = {
         date: new Date(), //this.transferForm.date,
         dagbknr: this.transferForm.dagbk
           ? this.transferForm.dagbk.toString()
           : "",
-        // comment: utils.transformFromUnicode(this.transferForm.comment),
-        // seller: this.transactionDialog.sId,
-        // amount: parseFloat(this.transactionDialog.amount),
-        // invoiceNumber: this.transactionDialog.invoiceNumber,
-        // reknr: this.transferForm.grtbk,
-        // kstrlCode: this.transferForm.kstpl,
-        // project: this.transferForm.prProject,
-        // vat: parseFloat(this.transactionDialog.VAT),
+        comment: utils.transformFromUnicode(this.transferForm.comment),
+        seller: this.transactionDialog.sId,
+        amount: parseFloat(this.transactionDialog.amount),
+        invoiceNumber: this.transactionDialog.invoiceNumber,
+        reknr: this.transferForm.grtbk,
+        kstrlCode: this.transferForm.kstpl,
+        project: this.transferForm.prProject,
+        vat: parseFloat(this.transactionDialog.VAT),
       };
       console.log(trans);
       this.loadingTrans = true;
@@ -602,8 +604,8 @@ export default {
         VAT: item.VAT,
         bId: "206322102",
       };
-      this.transferForm.dagbk = "399"; // default
-      console.log("this.trasferForm", this.transferForm);
+      this.transferForm.kstpl = "001CC001"; // default kstpl
+      console.log("this.kstplList", this.kstplList);
     },
     async search() {
       this.loadingTable = true;
@@ -615,7 +617,9 @@ export default {
         getBuyerInvoices.DocumentElement.invoices &&
         Array.isArray(getBuyerInvoices.DocumentElement.invoices)
       ) {
-        this.invoices = getBuyerInvoices.DocumentElement.invoices;
+        // this.invoices = getBuyerInvoices.DocumentElement.invoices;
+        this.invoices = orderBy(getBuyerInvoices.DocumentElement.invoices, ['REG_DT'], ['desc'])
+        // console.log('cccc', cc)
         if (this.searchForm.status != null) {
           this.invoices = this.invoices.filter(
             (r) => r.STATUS == this.searchForm.status

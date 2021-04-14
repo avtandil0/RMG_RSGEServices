@@ -143,9 +143,14 @@ namespace RSGEServices.Controllers
         [Route("transaction")]
         public async Task<Result> Transaction(TransferObjectDto transferObjectDto)
         {
-            if(transferObjectDto.Dagbknr == null)
+            if(string.IsNullOrEmpty(transferObjectDto.Dagbknr))
             {
-                return new Result(false, 0, "Dagbknr აუცილებელია");
+                return new Result(false, 0, "Journal აუცილებელია");
+            }
+
+            if (string.IsNullOrEmpty(transferObjectDto.Reknr))
+            {
+                return new Result(false, 0, "GL Account აუცილებელია");
             }
 
             Amutak amu= _repoWrapper.Amutak.FindByCondition(r => r.Dagbknr == transferObjectDto.Dagbknr)
@@ -170,9 +175,33 @@ namespace RSGEServices.Controllers
             Int32 newBkstnr = Int32.Parse(computeBkstnr);
             newBkstnr++;
 
-            string computeCrdnr = _repoWrapper.CicmpyRepository.
+            //string computeCrdnr = "";
+
+            var crdnrFromSeller = _repoWrapper.CicmpyRepository.
                                 FindByCondition(r => r.VatNumber == transferObjectDto.Seller)
-                                .FirstOrDefault().Crdnr;
+                                .FirstOrDefault();
+
+            if(crdnrFromSeller == null)
+            {
+                return new Result(false, 0, "Crdnr ვერ მოიძებნა");
+            }
+
+            string computeCrdnr = crdnrFromSeller.Crdnr;
+
+            //try
+            //{
+            //    computeCrdnr  = _repoWrapper.CicmpyRepository.
+            //                    FindByCondition(r => r.VatNumber == transferObjectDto.Seller)
+            //                    .FirstOrDefault().Crdnr;
+            //}
+            //catch (Exception)
+            //{
+
+            //    return new Result(false, 0, "Crdnr ვერ მოიძებნა");
+            //}
+            
+
+
 
             DateTime currentTime = new DateTime();
 
@@ -212,7 +241,7 @@ namespace RSGEServices.Controllers
                 && r.Dagbknr == transferObjectDto.Dagbknr).FirstOrDefault();
             if(dagbknrForReknr == null)
             {
-                return new Result(false, 0, "Dagbk ვერ მოიძებნა");
+                return new Result(false, 0, "Journal ვერ მოიძებნა");
             }
 
             var reknrForAmutak = dagbknrForReknr.Reknr;
