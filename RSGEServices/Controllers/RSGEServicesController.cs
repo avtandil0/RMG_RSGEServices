@@ -143,7 +143,17 @@ namespace RSGEServices.Controllers
         [Route("transaction")]
         public async Task<Result> Transaction(TransferObjectDto transferObjectDto)
         {
-            if(string.IsNullOrEmpty(transferObjectDto.Dagbknr))
+            var exists = _repoWrapper.RsgeInvoiceLogRepository
+                            .FindByCondition(r => r.RsgeinvoiceId == transferObjectDto.Id)
+                            .FirstOrDefault(); 
+
+            if(exists != null)
+            {
+                return new Result(false, 0, "ინვოისი უკვე გატარებულია");
+            }
+            
+
+            if (string.IsNullOrEmpty(transferObjectDto.Dagbknr))
             {
                 return new Result(false, 0, "Journal აუცილებელია");
             }
@@ -186,7 +196,7 @@ namespace RSGEServices.Controllers
                 return new Result(false, 0, "Crdnr ვერ მოიძებნა");
             }
 
-            string computeCrdnr = crdnrFromSeller.Crdnr;
+            string computeCrdnr = crdnrFromSeller?.Crdnr;
 
             //try
             //{
@@ -553,6 +563,7 @@ namespace RSGEServices.Controllers
 
             Gbkmut gbkmut1 = new Gbkmut
             {
+                
                  Regelcode = "B",
                  Bkjrcode = (Int16)transferObjectDto.Date.Year,
                  Reknr = amutas1.Reknr,
@@ -1099,6 +1110,22 @@ namespace RSGEServices.Controllers
                 Verified = 0
             };
 
+            var currentDate = DateTime.Now;
+            RsgeinvoiceLog rsgeInvoicesLog1 = new RsgeinvoiceLog
+            {
+                RsgeinvoiceId = transferObjectDto.Id,
+                DateCreated = currentDate
+            };
+            RsgeinvoiceLog rsgeInvoicesLog2 = new RsgeinvoiceLog
+            {
+                RsgeinvoiceId = transferObjectDto.Id,
+                DateCreated = currentDate
+            };
+            RsgeinvoiceLog rsgeInvoicesLog3 = new RsgeinvoiceLog
+            {
+                RsgeinvoiceId = transferObjectDto.Id,
+                DateCreated = currentDate
+            };
 
             _repoWrapper.Amutas.Create(amutas1);
             _repoWrapper.Amutas.Create(amutas2);
@@ -1107,6 +1134,10 @@ namespace RSGEServices.Controllers
             _repoWrapper.GbkmutRepository.Create(gbkmut1);
             _repoWrapper.GbkmutRepository.Create(gbkmut2);
             _repoWrapper.GbkmutRepository.Create(gbkmut3);
+
+            _repoWrapper.RsgeInvoiceLogRepository.Create(rsgeInvoicesLog1);
+            _repoWrapper.RsgeInvoiceLogRepository.Create(rsgeInvoicesLog2);
+            _repoWrapper.RsgeInvoiceLogRepository.Create(rsgeInvoicesLog3);
 
             _repoWrapper.BankTransactions.Create(bankTransactions1);
             _repoWrapper.BankTransactions.Create(bankTransactions2);

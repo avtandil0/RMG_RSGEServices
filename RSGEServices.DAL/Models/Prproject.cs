@@ -82,10 +82,10 @@ namespace RSGEServices.DAL.Models
         public Guid Sysguid { get; set; }
         public string Compression { get; set; }
         public string DrawingNumber { get; set; }
-        //public byte? Poyes { get; set; }
+        public byte? Poyes { get; set; }
         public byte SubType { get; set; }
-        //public double? Vatamount { get; set; }
-        //public double? VatpoOriginalCurrency { get; set; }
+        public double? Vatamount { get; set; }
+        public double? VatpoOriginalCurrency { get; set; }
         public DateTime? CspickitlatestTryInService { get; set; }
     }
 }

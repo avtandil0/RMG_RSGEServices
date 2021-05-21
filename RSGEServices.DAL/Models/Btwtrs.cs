@@ -61,5 +61,7 @@ namespace RSGEServices.DAL.Models
         public bool? UseCashSystem { get; set; }
         public string Vatsection { get; set; }
         public bool VatsplitPayment { get; set; }
+        public double NonTaxableBasePercentage { get; set; }
+        public bool IncludeInWithholdingReport { get; set; }
     }
 }

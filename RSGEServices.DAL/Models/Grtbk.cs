@@ -115,5 +115,6 @@ namespace RSGEServices.DAL.Models
         public byte ExcludeVatlisting { get; set; }
         public string Msiccode { get; set; }
         public string TaxonomyCode { get; set; }
+        public string TariffCode { get; set; }
     }
 }

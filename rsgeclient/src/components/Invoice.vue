@@ -165,10 +165,15 @@
                         class="table-action-button"
                         @click="openTransactionDialog(item)"
                       >
-                        <v-icon>mdi-clipboard-check</v-icon>
+                        <v-icon :color="item.isInDatabase ? 'green' : ''"
+                          >mdi-clipboard-check</v-icon
+                        >
                       </v-btn>
                     </template>
-                    <span>გატარება</span>
+                    <span
+                      >გატარება
+                      {{ item.isInDatabase ? " -- გატარებული" : "" }}</span
+                    >
                   </v-tooltip>
                 </v-flex>
               </v-layout>
@@ -385,6 +390,7 @@ export default {
   data: () => ({
     loadingTrans: false,
     loadingInvoiceGoods: false,
+    rsGeInvoiceLogs: [],
     dagbkList: [],
     grtbkList: [],
     kstdrList: [],
@@ -462,10 +468,9 @@ export default {
       sName: null,
       bId: null,
     },
+    importedGbkmut: [],
   }),
   async created() {
-    //ї¦Її
-    console.log(1111111, utils.tranformToUnicode("ї¦Її"));
     //  var test = await this.$http.get_ser_users();
     // var test1 = await this.$http.get_un_id_from_user_id();
     // console.log("test1", test1);
@@ -547,8 +552,9 @@ export default {
       //   "from unicode",
       //   utils.transformFromUnicode(this.transferForm.comment)
       // );
-      console.log('this.transferForm.comment',this.transferForm.comment)
+      console.log("this.transferForm.comment", this.transactionDialog);
       var trans = {
+        id: this.transactionDialog.id,
         date: new Date(), //this.transferForm.date,
         dagbknr: this.transferForm.dagbk
           ? this.transferForm.dagbk.toString()
@@ -573,6 +579,7 @@ export default {
 
       if (postTrans.isSuccess) {
         this.transactionDialog.open = false;
+        this.search()
       }
     },
     onCloseTransaction() {
@@ -608,6 +615,8 @@ export default {
       console.log("this.kstplList", this.kstplList);
     },
     async search() {
+      this.rsGeInvoiceLogs = await this.$http.getRsgeinvoiceLog();
+      console.log("cc cccc cc", this.rsGeInvoiceLogs);
       this.loadingTable = true;
       console.log("this.searchForm", this.searchForm);
       var getBuyerInvoices = await this.$http.getBuyerInvoices(this.searchForm);
@@ -618,7 +627,11 @@ export default {
         Array.isArray(getBuyerInvoices.DocumentElement.invoices)
       ) {
         // this.invoices = getBuyerInvoices.DocumentElement.invoices;
-        this.invoices = orderBy(getBuyerInvoices.DocumentElement.invoices, ['REG_DT'], ['desc'])
+        this.invoices = orderBy(
+          getBuyerInvoices.DocumentElement.invoices,
+          ["REG_DT"],
+          ["desc"]
+        );
         // console.log('cccc', cc)
         if (this.searchForm.status != null) {
           this.invoices = this.invoices.filter(
@@ -629,13 +642,22 @@ export default {
         this.invoices = [];
       }
       if (this.searchForm.tanxa) {
-         this.invoices = this.invoices.filter(
-            (r) => r.TANXA.toString().includes(this.searchForm.tanxa)
-          );
+        this.invoices = this.invoices.filter((r) =>
+          r.TANXA.toString().includes(this.searchForm.tanxa)
+        );
       } else {
         // this.invoices = [];
       }
 
+      this.invoices.forEach((element) => {
+        if (this.rsGeInvoiceLogs.includes(element.ID)) {
+          element.isInDatabase = true;
+        } else {
+          element.isInDatabase = false;
+        }
+      });
+
+      console.log("this.invoices ", this.invoices);
       this.loadingTable = false;
     },
   },

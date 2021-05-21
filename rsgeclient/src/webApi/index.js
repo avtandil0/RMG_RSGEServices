@@ -72,7 +72,19 @@ const get_un_id_from_user_id = () => callApi({
     method: 'get',
 })
 
+const getGbkmut = () => callApi({
+    url: `/api/references/getGbkmut`,
+    method: 'get',
+})
+
+const getRsgeinvoiceLog = () => callApi({
+    url: `/api/references/getRsgeinvoiceLog`,
+    method: 'get',
+})
+
 export default {
+    getRsgeinvoiceLog,
+    getGbkmut,
     get_un_id_from_user_id,
     get_un_id_from_tin,
     get_ser_users,

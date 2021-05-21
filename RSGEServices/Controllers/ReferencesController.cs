@@ -55,8 +55,29 @@ namespace RSGEServices.Controllers
             {
                 ProjectNr = r.ProjectNr,
                 Description = r.Description
-            });
+            }).ToList();
             return result;
         }
+
+        [HttpGet]
+        [Route("getRsgeinvoiceLog")]
+        public IEnumerable<string> GetRsgeinvoiceLog()
+        {
+            var result = _repoWrapper.RsgeInvoiceLogRepository.FindAll().Select(r => r.RsgeinvoiceId).Distinct();
+            return result;
+        }
+
+        //[HttpGet]
+        //[Route("getGbkmut")]
+        //public IEnumerable<GbkmutDto> GetGbkmut()
+        //{
+        //    var result = _repoWrapper.ReferencesRepository.GetGbkmut()
+        //            .Where(r => r.RsgeinvoiceId == null).Select(r => new GbkmutDto
+        //    {
+        //        ID = r.Id,
+        //        RSGEStatementId = r.RsgeinvoiceId
+        //            });
+        //    return result;
+        //}
     }
 }

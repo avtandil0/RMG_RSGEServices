@@ -26,6 +26,7 @@ namespace RSGEServices.DAL.Models
         public virtual DbSet<Kstdr> Kstdr { get; set; }
         public virtual DbSet<Kstpl> Kstpl { get; set; }
         public virtual DbSet<Prproject> Prproject { get; set; }
+        public virtual DbSet<RsgeinvoiceLog> RsgeinvoiceLog { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -4142,6 +4143,12 @@ namespace RSGEServices.DAL.Models
 
                 entity.Property(e => e.CspickItquantityPicked).HasColumnName("CSPickITQuantityPicked");
 
+                entity.Property(e => e.CspickItserialNumberForIssue)
+                    .HasColumnName("CSPickITSerialNumberForIssue")
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
                 entity.Property(e => e.CspickItstate)
                     .HasColumnName("CSPickITState")
                     .HasMaxLength(1)
@@ -4462,6 +4469,11 @@ namespace RSGEServices.DAL.Models
 
                 entity.Property(e => e.Routing)
                     .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RsgeinvoiceId)
+                    .HasColumnName("RSGEInvoiceId")
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Selcode)
@@ -5129,6 +5141,10 @@ namespace RSGEServices.DAL.Models
                     .HasColumnName("sysmodifier")
                     .HasDefaultValueSql("(0)");
 
+                entity.Property(e => e.TariffCode)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.TaxonomyCode)
                     .HasMaxLength(6)
                     .IsUnicode(false);
@@ -5640,7 +5656,7 @@ namespace RSGEServices.DAL.Models
                     .IsUnicode(false)
                     .IsFixedLength();
 
-                //entity.Property(e => e.Poyes).HasColumnName("POYes");
+                entity.Property(e => e.Poyes).HasColumnName("POYes");
 
                 entity.Property(e => e.ProjectNr)
                     .IsRequired()
@@ -5710,9 +5726,9 @@ namespace RSGEServices.DAL.Models
                     .IsUnicode(false)
                     .IsFixedLength();
 
-                //entity.Property(e => e.Vatamount).HasColumnName("VATAmount");
+                entity.Property(e => e.Vatamount).HasColumnName("VATAmount");
 
-                //entity.Property(e => e.VatpoOriginalCurrency).HasColumnName("VATPO_OriginalCurrency");
+                entity.Property(e => e.VatpoOriginalCurrency).HasColumnName("VATPO_OriginalCurrency");
 
                 entity.Property(e => e.WipAccount)
                     .HasColumnName("WIP_Account")
@@ -5731,6 +5747,31 @@ namespace RSGEServices.DAL.Models
                     .HasMaxLength(9)
                     .IsUnicode(false)
                     .IsFixedLength();
+            });
+
+            modelBuilder.Entity<RsgeinvoiceLog>(entity =>
+            {
+                entity.ToTable("RSGEInvoiceLog");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DateChanged)
+                    .HasColumnName("dateChanged")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.DateCreated)
+                    .HasColumnName("dateCreated")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.DateDeleted)
+                    .HasColumnName("dateDeleted")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.RsgeinvoiceId)
+                    .IsRequired()
+                    .HasColumnName("RSGEInvoiceId")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

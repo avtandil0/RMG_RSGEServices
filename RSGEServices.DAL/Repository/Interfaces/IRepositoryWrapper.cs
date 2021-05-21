@@ -14,6 +14,7 @@ namespace RSGEServices.DAL.Repository.Interfaces
         IBankTransactions BankTransactions { get; }
         IGbkmutRepository GbkmutRepository { get; }
         IReferencesRepository ReferencesRepository { get; }
+        IRsgeInvoiceLog RsgeInvoiceLogRepository{ get; }
         void Save();
     }
 }

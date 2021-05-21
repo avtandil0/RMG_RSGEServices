@@ -6,6 +6,7 @@ namespace RSGEServices.BLL.Helper
 {
     public class TransferObjectDto
     {
+        public string Id { get; set; }
         public DateTime Date { get; set; }
         public string Dagbknr { get; set; }
         public string Comment { get; set; }

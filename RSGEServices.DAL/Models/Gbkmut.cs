@@ -193,8 +193,11 @@ namespace RSGEServices.DAL.Models
         public Guid? CspickIttransactionGuid { get; set; }
         public int? CspickIttransferLineId { get; set; }
         public DateTime? TaxDate { get; set; }
+        public double? ActualTonKm { get; set; }
         public DateTime? CspickItlockTime { get; set; }
         public int? CspickItlockResource { get; set; }
         public string CspickItlockProcessId { get; set; }
+        public string CspickItserialNumberForIssue { get; set; }
+        public string RsgeinvoiceId { get; set; }
     }
 }

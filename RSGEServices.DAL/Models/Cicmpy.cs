@@ -341,7 +341,7 @@ namespace RSGEServices.DAL.Models
         public string WithholdingCertificate { get; set; }
         public byte IsPayerRejected { get; set; }
         public DateTime? CzwebAccessSince { get; set; }
-        //public double? DaysFromNow { get; set; }
+        public double? DaysFromNow { get; set; }
         public string WithholdingPayer { get; set; }
         public string CspickItcwdatabaseNameSalesDb { get; set; }
         public byte CspickItcwdebtorIsSalesDb { get; set; }

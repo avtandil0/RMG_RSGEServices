@@ -17,6 +17,20 @@ namespace RSGEServices.DAL.Repository
         private IReferencesRepository _referencesRepository;
         private ICicmpyRepository _cicmpyRepository;
         private IGbkmutRepository _gbkmutRepository;
+        private IRsgeInvoiceLog _rsgeInvoiceLog;
+
+        public IRsgeInvoiceLog RsgeInvoiceLogRepository
+        {
+            get
+            {
+                if (_rsgeInvoiceLog == null)
+                {
+                    _rsgeInvoiceLog = new RSGEInvoiceLogRepository(_repoContext);
+                }
+
+                return _rsgeInvoiceLog;
+            }
+        }
 
         public ICicmpyRepository CicmpyRepository
         {

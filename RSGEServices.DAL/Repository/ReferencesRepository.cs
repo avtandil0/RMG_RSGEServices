@@ -15,29 +15,39 @@ namespace RSGEServices.DAL.Repository
             this.db = db;
         }
 
-        public IEnumerable<Amutak> GetAmutak()
+        public IQueryable<Amutak> GetAmutak()
         {
-            return db.Amutak.ToList();
+            return db.Amutak;
         }
 
-        public IEnumerable<Btwtrs> GetBtwtrs()
+        public IQueryable<Btwtrs> GetBtwtrs()
         {
-            return db.Btwtrs.ToList();
+            return db.Btwtrs;
         }
 
-        public IEnumerable<Kstdr> GetKstdr()
+        public IQueryable<Kstdr> GetKstdr()
         {
-            return db.Kstdr.ToList();
+            return db.Kstdr;
         }
 
-        public IEnumerable<Kstpl> GetKstpl()
+        public IQueryable<Kstpl> GetKstpl()
         {
-            return db.Kstpl.ToList();
+            return db.Kstpl;
         }
 
-        public IEnumerable<Prproject> GetPrproject()
+        public IQueryable<Prproject> GetPrproject()
         {
-            return db.Prproject.ToList();
+            return db.Prproject;
+        }
+
+        public IQueryable<Gbkmut> GetGbkmut()
+        {
+            return db.Gbkmut;
+        }
+
+        public IQueryable<RsgeinvoiceLog> GetRsgeinvoiceLog()
+        {
+            return db.RsgeinvoiceLog;
         }
     }
 }
